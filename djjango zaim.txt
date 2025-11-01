@@ -1,0 +1,272 @@
+2.2.2 Menyiapkan Database
+
+Langkah ini hanya diperlukan jika Anda ingin bekerja dengan mesin basis data “besar” seperti PostgreSQL, MariaDB, MySQL, atau Oracle.
+Untuk menginstal basis data semacam itu, silakan lihat informasi instalasi dari masing-masing basis data.
+
+2.2.3 Menginstal Django
+
+Ada tiga cara untuk menginstal Django:
+
+Menginstal rilis resmi.
+Ini adalah pendekatan terbaik untuk sebagian besar pengguna.
+
+Menginstal versi Django yang disediakan oleh distribusi sistem operasi Anda.
+
+Menginstal versi pengembangan terbaru.
+Opsi ini ditujukan bagi para penggemar yang menginginkan fitur-fitur terbaru dan tidak takut menggunakan kode yang masih sangat baru.
+Anda mungkin akan menemukan bug baru pada versi pengembangan, tetapi dengan melaporkannya, Anda membantu proses pengembangan Django.
+Selain itu, rilis dari paket pihak ketiga cenderung kurang kompatibel dengan versi pengembangan dibandingkan dengan rilis stabil terbaru.
+2.2.4 Verifikasi
+
+Untuk memverifikasi bahwa Django dapat dikenali oleh Python, ketik perintah python dari shell Anda.
+Kemudian, pada prompt Python, coba impor Django dengan mengetik:
+
+>>> import django
+>>> print(django.get_version())
+5.2
+
+
+Jika hasilnya muncul seperti di atas, berarti Django sudah terpasang dengan benar.
+Namun, Anda mungkin memiliki versi Django yang berbeda yang terinstal di sistem Anda.
+
+2.2.5 Selesai!
+
+Itu saja — sekarang Anda sudah siap untuk melanjutkan ke tutorial berikutnya.
+
+2.3 Menulis Aplikasi Django Pertama Anda, Bagian 1
+
+Mari kita belajar melalui contoh.
+Dalam tutorial ini, kita akan memandu Anda membuat sebuah aplikasi polling sederhana (basic poll application).
+
+Aplikasi ini akan terdiri dari dua bagian:
+2.3 Menulis Aplikasi Django Pertama Anda, Bagian 1
+Django Documentation, Rilis 5.2.8.dev20251031124732
+
+Aplikasi yang akan kita buat terdiri dari dua bagian:
+
+Situs publik yang memungkinkan orang melihat polling dan memberikan suara.
+
+Situs admin yang memungkinkan Anda menambah, mengubah, dan menghapus polling.
+
+Kita akan berasumsi bahwa Anda sudah menginstal Django.
+Anda dapat memeriksa apakah Django sudah terpasang dan versi yang digunakan dengan menjalankan perintah berikut di terminal (ditandai dengan awalan $):
+
+$ python -m django --version
+
+
+Jika Django terinstal, Anda akan melihat versi yang digunakan.
+Jika belum, Anda akan mendapatkan pesan kesalahan “No module named django”.
+
+Tutorial ini ditulis untuk Django versi 5.2, yang mendukung Python 3.10 dan versi yang lebih baru.
+Jika versi Django Anda berbeda, Anda dapat melihat tutorial yang sesuai dengan versi Django Anda menggunakan pengalih versi (version switcher) di pojok kanan bawah halaman dokumentasi, atau perbarui Django ke versi terbaru.
+Jika Anda menggunakan versi Python yang lebih lama, periksa dokumentasi “What Python version can I use with Django?” untuk menemukan versi Django yang kompatibel.
+
+?? Tempat Mendapat Bantuan
+
+Jika Anda mengalami kesulitan saat mengikuti tutorial ini, buka bagian Getting Help di FAQ Django.
+
+2.3.1 Membuat Proyek
+
+Jika ini pertama kalinya Anda menggunakan Django, ada beberapa langkah awal yang perlu dilakukan.
+Anda perlu membuat kode otomatis yang membentuk sebuah proyek Django — yaitu kumpulan pengaturan untuk sebuah instance Django, termasuk konfigurasi database, opsi khusus Django, dan pengaturan untuk aplikasi.
+
+Dari command line, masuk ke direktori tempat Anda ingin menyimpan kode, lalu buat direktori baru bernama djangotutorial.
+(Nama direktori ini tidak berpengaruh pada Django; Anda bisa menamainya sesuka hati.)
+
+$ mkdir djangotutorial
+
+
+Kemudian jalankan perintah berikut untuk membuat proyek Django baru:
+
+$ django-admin startproject mysite djangotutorial
+
+
+Perintah ini akan membuat proyek bernama mysite di dalam folder djangotutorial.
+Jika perintah ini tidak berhasil, lihat bagian Problems running django-admin.
+
+?? Catatan:
+Hindari memberi nama proyek dengan nama komponen bawaan Python atau Django.
+Misalnya, jangan gunakan nama django (akan bertabrakan dengan Django itu sendiri) atau test (karena konflik dengan modul Python bawaan).
+
+?? Struktur Folder yang Dihasilkan
+djangotutorial/
+    manage.py
+    mysite/
+        __init__.py
+        settings.py
+        urls.py
+        asgi.py
+        wsgi.py
+
+Penjelasan:
+
+manage.py
+Utilitas baris perintah untuk berinteraksi dengan proyek Django.
+Anda bisa membaca detail lengkapnya di dokumentasi django-admin and manage.py.
+
+mysite/
+Direktori ini adalah paket Python dari proyek Anda.
+Nama folder inilah yang digunakan untuk mengimpor apa pun di dalamnya (misalnya mysite.urls).
+
+mysite/init.py
+File kosong yang memberi tahu Python bahwa folder ini adalah paket Python.
+(Jika Anda baru mengenal Python, baca lebih lanjut tentang paket di dokumentasi resmi Python.)
+
+mysite/settings.py
+Berisi konfigurasi untuk proyek Django Anda (termasuk database dan opsi lainnya).
+
+mysite/urls.py
+Deklarasi URL untuk proyek Django Anda — semacam “daftar isi” untuk situs web Anda.
+
+mysite/asgi.py
+Titik masuk (entry point) untuk server web yang mendukung ASGI.
+
+mysite/wsgi.py
+Titik masuk untuk server web yang mendukung WSGI.
+
+2.3.2 Server Pengembangan (Development Server)
+
+Mari kita verifikasi bahwa proyek Django Anda berfungsi.
+Masuk ke direktori djangotutorial (jika belum), lalu jalankan:
+
+$ python manage.py runserver
+
+
+Anda akan melihat keluaran seperti berikut:
+
+Performing system checks...
+
+System check identified no issues (0 silenced).
+You have unapplied migrations; your app may not work properly until they are applied.
+Run 'python manage.py migrate' to apply them.
+October 31, 2025 - 15:50:53
+Django version 5.2, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+
+
+?? Abaikan sementara peringatan tentang unapplied migrations — kita akan mengurusnya nanti.
+
+Sekarang, buka browser Anda dan kunjungi
+?? http://127.0.0.1:8000/
+
+Anda akan melihat halaman bertuliskan “Congratulations!” dengan gambar roket.
+Artinya, proyek Django Anda berhasil dijalankan!
+
+Server ini adalah server pengembangan ringan yang ditulis sepenuhnya dalam Python.
+Django menyediakannya agar Anda bisa mengembangkan aplikasi dengan cepat tanpa harus menyiapkan server produksi seperti Apache.
+
+?? Catatan penting:
+Jangan gunakan server ini untuk production (lingkungan nyata).
+Ini hanya untuk pengembangan lokal.
+
+Untuk menggunakan port lain, lihat referensi perintah runserver.
+
+?? Pemuat Ulang Otomatis (Automatic Reloading)
+
+Server pengembangan secara otomatis memuat ulang kode Python saat ada perubahan.
+Namun, beberapa perubahan seperti menambahkan file baru mungkin memerlukan restart manual.
+
+2.3.3 Membuat Aplikasi “Polls”
+
+Sekarang lingkungan proyek sudah siap, saatnya mulai bekerja!
+
+Setiap aplikasi di Django adalah paket Python yang mengikuti struktur tertentu.
+Django memiliki utilitas yang secara otomatis membuat struktur dasar aplikasi agar Anda bisa langsung menulis kode tanpa repot menyiapkan folder secara manual.
+
+?? Perbedaan antara Proyek dan Aplikasi
+
+Aplikasi (app) adalah komponen yang melakukan sesuatu tertentu — misalnya sistem blog, database data publik, atau aplikasi polling sederhana.
+
+Proyek (project) adalah kumpulan konfigurasi dan aplikasi untuk satu situs web tertentu.
+
+Satu proyek dapat memiliki banyak aplikasi, dan satu aplikasi dapat digunakan di beberapa proyek.
+
+Dalam tutorial ini, kita akan membuat aplikasi polls di dalam folder djangotutorial.
+
+Untuk membuat aplikasi, pastikan Anda berada di direktori yang sama dengan manage.py, lalu jalankan:
+
+$ python manage.py startapp polls
+
+
+Ini akan membuat struktur direktori seperti berikut:
+
+polls/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    views.py
+
+
+Struktur ini akan menjadi rumah bagi aplikasi polling Anda.
+
+2.3.4 Menulis View Pertama Anda
+
+Buka file polls/views.py, lalu tulis kode Python berikut:
+
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse("Hello, world. You're at the polls index.")
+
+
+Ini adalah view paling dasar di Django.
+
+Agar dapat diakses melalui browser, kita harus memetakan view ini ke sebuah URL.
+Untuk itu, kita perlu membuat URL configuration (URLconf).
+
+Buat file baru bernama polls/urls.py dan isi dengan kode berikut:
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("", views.index, name="index"),
+]
+
+
+Sekarang, struktur folder polls/ Anda seharusnya terlihat seperti ini:
+
+polls/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    urls.py
+    views.py
+
+
+Langkah selanjutnya adalah menghubungkan URLconf aplikasi polls ke URL utama proyek mysite.
+Buka file mysite/urls.py, lalu ubah menjadi seperti berikut:
+
+from django.contrib import admin
+from django.urls import include, path
+
+urlpatterns = [
+    path("polls/", include("polls.urls")),
+    path("admin/", admin.site.urls),
+]
+
+
+Fungsi path() membutuhkan setidaknya dua argumen: route dan view.
+Fungsi include() memungkinkan kita menyertakan URLconf lain.
+
+Setiap kali Django menemukan include(), Django akan memotong bagian URL yang sudah cocok sejauh ini dan mengirimkan sisa string ke URLconf yang disertakan untuk diproses lebih lanjut.
+
+Ide utama dari include() adalah memudahkan sistem URL agar dapat dipasang di berbagai lokasi — misalnya:
+
+/polls/
+
+/fun_polls/
+
+/content/polls/
+
+Semuanya dapat diarahkan ke aplikasi yang sama, cukup dengan mengubah jalur di urls.py.
